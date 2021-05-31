@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 export const loginStyles = StyleSheet.create({
   formContainer: {
@@ -51,5 +51,15 @@ export const loginStyles = StyleSheet.create({
   newUserContainer: {
     alignItems: 'flex-end',
     marginTop: 10,
+  },
+  buttonReturn: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 0,
+    left: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 100,
   },
 });
