@@ -5,7 +5,7 @@ import {LoginScreen} from '../screens/LoginScreen';
 import {RegisterScreen} from '../screens/RegisterScreen';
 import {ProtectedScreen} from '../screens/ProtectedScreen';
 
-type RootStackParams = {
+export type RootStackParams = {
   LoginScreen: undefined;
   RegisterScreen: undefined;
   ProtectedScreen: undefined;

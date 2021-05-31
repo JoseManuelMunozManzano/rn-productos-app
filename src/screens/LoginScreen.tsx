@@ -1,76 +1,110 @@
+import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {Platform, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import {Background} from '../components/Background';
 import {WhiteLogo} from '../components/WhiteLogo';
+import {useForm} from '../hooks/useForm';
 import {loginStyles} from '../theme/LoginTheme';
+import {RootStackParams} from '../navigator/Navigator';
 
-export const LoginScreen = () => {
+interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'> {}
+
+export const LoginScreen = ({navigation}: Props) => {
+  const {email, password, onChange} = useForm({
+    email: '',
+    password: '',
+  });
+
+  const onLogin = () => {
+    console.log({email, password});
+    Keyboard.dismiss();
+  };
+
   return (
     <>
       {/* Background */}
       <Background />
 
-      <View
-        style={[
-          loginStyles.formContainer,
-          Platform.OS === 'android'
-            ? loginStyles.formContainerAndroid
-            : loginStyles.formContainerIos,
-        ]}>
-        {/* Keyboard avoid view */}
-        <WhiteLogo />
-
-        <Text style={loginStyles.title}>Login</Text>
-        <Text style={loginStyles.label}>Email:</Text>
-        <TextInput
-          placeholder="Ingrese su email"
-          placeholderTextColor="rgba(255, 255, 255, .4)"
-          keyboardType="email-address"
-          underlineColorAndroid="white"
+      <KeyboardAwareScrollView
+        style={{flex: 1}}
+        resetScrollToCoords={{x: 0, y: 0}}
+        scrollEnabled>
+        <View
           style={[
-            loginStyles.inputField,
-            Platform.OS === 'ios' && loginStyles.inputFieldIOS,
-          ]}
-          selectionColor="white"
-          // TODO: onchange, value
+            loginStyles.formContainer,
+            Platform.OS === 'android'
+              ? loginStyles.formContainerAndroid
+              : loginStyles.formContainerIos,
+          ]}>
+          {/* Keyboard avoid view */}
+          <WhiteLogo />
 
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+          <Text style={loginStyles.title}>Login</Text>
+          <Text style={loginStyles.label}>Email:</Text>
+          <TextInput
+            placeholder="Ingrese su email"
+            placeholderTextColor="rgba(255, 255, 255, .4)"
+            keyboardType="email-address"
+            underlineColorAndroid="white"
+            style={[
+              loginStyles.inputField,
+              Platform.OS === 'ios' && loginStyles.inputFieldIOS,
+            ]}
+            selectionColor="white"
+            onChangeText={value => onChange(value, 'email')}
+            value={email}
+            onSubmitEditing={onLogin}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
 
-        <Text style={loginStyles.label}>Contraseña:</Text>
-        <TextInput
-          placeholder="******"
-          placeholderTextColor="rgba(255, 255, 255, .4)"
-          underlineColorAndroid="white"
-          style={[
-            loginStyles.inputField,
-            Platform.OS === 'ios' && loginStyles.inputFieldIOS,
-          ]}
-          selectionColor="white"
-          // TODO: onchange, value
+          <Text style={loginStyles.label}>Contraseña:</Text>
+          <TextInput
+            placeholder="******"
+            placeholderTextColor="rgba(255, 255, 255, .4)"
+            underlineColorAndroid="white"
+            secureTextEntry
+            style={[
+              loginStyles.inputField,
+              Platform.OS === 'ios' && loginStyles.inputFieldIOS,
+            ]}
+            selectionColor="white"
+            onChangeText={value => onChange(value, 'password')}
+            value={password}
+            onSubmitEditing={onLogin}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
 
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+          {/* Boton login */}
+          <View style={loginStyles.buttonContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={loginStyles.button}
+              onPress={onLogin}>
+              <Text style={loginStyles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Boton login */}
-        <View style={loginStyles.buttonContainer}>
-          <TouchableOpacity activeOpacity={0.8} style={loginStyles.button}>
-            <Text style={loginStyles.buttonText}>Login</Text>
-          </TouchableOpacity>
+          {/* Crear una nueva cuenta */}
+          <View style={loginStyles.newUserContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.replace('RegisterScreen')}>
+              <Text style={loginStyles.buttonText}>Nueva cuenta </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        {/* Crear una nueva cuenta */}
-        <View style={loginStyles.newUserContainer}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => console.log('press')}>
-            <Text style={loginStyles.buttonText}>Nueva cuenta </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </KeyboardAwareScrollView>
     </>
   );
 };
