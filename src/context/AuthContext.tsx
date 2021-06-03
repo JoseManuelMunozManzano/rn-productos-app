@@ -34,13 +34,19 @@ export const AuthProvider = ({
   const signUp = () => {};
   const signIn = async ({correo, password}: LoginData) => {
     try {
-      const resp = await cafeApi.post<LoginResponse>('/auth/login', {
+      const {data} = await cafeApi.post<LoginResponse>('/auth/login', {
         correo,
         password,
       });
-      console.log(resp.data);
+      dispatch({
+        type: 'signUp',
+        payload: {
+          token: data.token,
+          user: data.usuario,
+        },
+      });
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response.data.msg);
     }
   };
   const logOut = () => {};
