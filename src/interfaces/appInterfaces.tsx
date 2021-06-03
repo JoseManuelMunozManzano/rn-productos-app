@@ -1,3 +1,8 @@
+export interface LoginData {
+  correo: string;
+  password: string;
+}
+
 export interface LoginResponse {
   usuario: Usuario;
   token: string;
