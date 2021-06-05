@@ -52,6 +52,9 @@ export const AuthProvider = ({
       return dispatch({type: 'notAuthenticated'});
     }
 
+    // El token es uno nuevo con una nueva vigencia
+    await AsyncStorage.setItem('token', resp.data.token);
+
     dispatch({
       type: 'signUp',
       payload: {
