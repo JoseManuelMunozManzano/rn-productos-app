@@ -43,6 +43,22 @@ export const AuthProvider = ({
     if (!token) {
       return dispatch({type: 'notAuthenticated'});
     }
+
+    // Hay token
+    // NOTA: Habría que mandar configuración del header, pero no hace falta porque se ha hecho un middleware axios
+    // en cafeApi.tsx
+    const resp = await cafeApi.get('/auth');
+    if (resp.status !== 200) {
+      return dispatch({type: 'notAuthenticated'});
+    }
+
+    dispatch({
+      type: 'signUp',
+      payload: {
+        token: resp.data.token,
+        user: resp.data.usuario,
+      },
+    });
   };
 
   const signUp = () => {};
