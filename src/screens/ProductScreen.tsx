@@ -1,7 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   ActivityIndicator,
   Button,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,8 +35,6 @@ export const ProductScreen = ({route, navigation}: Props) => {
       img: '',
     },
   );
-
-  const [selectedLanguage, setSelectedLanguage] = useState();
 
   useEffect(() => {
     navigation.setOptions({
@@ -85,10 +84,8 @@ export const ProductScreen = ({route, navigation}: Props) => {
         )}
 
         <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
-          }>
+          selectedValue={categoriaId}
+          onValueChange={value => onChange(value, 'categoriaId')}>
           {categories.map(c => (
             <Picker.Item key={c._id} label={c.nombre} value={c._id} />
           ))}
@@ -122,7 +119,16 @@ export const ProductScreen = ({route, navigation}: Props) => {
           />
         </View>
 
-        <Text>{JSON.stringify(form, null, 5)}</Text>
+        {img.length > 0 && (
+          <Image
+            source={{uri: img}}
+            style={{marginTop: 20, width: '100%', height: 200}}
+          />
+        )}
+
+        {/* Mostrar imagen temporal */}
+
+        {/* <Text>{JSON.stringify(form, null, 5)}</Text> */}
       </ScrollView>
     </View>
   );
