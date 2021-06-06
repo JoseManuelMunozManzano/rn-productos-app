@@ -25,7 +25,8 @@ export const ProductScreen = ({route, navigation}: Props) => {
   const {id = '', name = ''} = route.params;
 
   const {categories, isLoading} = useCategories();
-  const {loadProductById} = useContext(ProductsContext);
+  const {loadProductById, addProduct, updateProduct} =
+    useContext(ProductsContext);
 
   const {_id, categoriaId, nombre, img, form, onChange, setFormValue} = useForm(
     {
@@ -38,9 +39,9 @@ export const ProductScreen = ({route, navigation}: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: name || 'Nuevo producto',
+      title: nombre || 'Sin nombre de producto',
     });
-  }, []);
+  }, [nombre]);
 
   useEffect(() => {
     loadProduct();
@@ -59,6 +60,21 @@ export const ProductScreen = ({route, navigation}: Props) => {
       img: product.img || '',
       nombre,
     });
+  };
+
+  const saveOrUpdate = () => {
+    if (id.length > 0) {
+      updateProduct(categoriaId, nombre, id);
+    } else {
+      // Esto no funcionaría la primera vez porque no ha renderizado todavía. La segunda vez que se pulsara Guardar (sin salir) si funcionaría
+      // if (categoriaId.length === 0) {
+      //   onChange(categories[0]._id, 'categoriaId');
+      // }
+      // Como no funciona el código anterior para lo que queremos, usamos esta sentencia
+      const tempCategoriaId = categoriaId || categories[0]._id;
+
+      addProduct(tempCategoriaId, nombre);
+    }
   };
 
   return (
@@ -94,30 +110,32 @@ export const ProductScreen = ({route, navigation}: Props) => {
         <Button
           title="Guardar"
           // TODO: Por hacer
-          onPress={() => {}}
+          onPress={saveOrUpdate}
           color="#5856D6"
         />
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginTop: 10,
-          }}>
-          <Button
-            title="Cámara"
-            // TODO: Por hacer
-            onPress={() => {}}
-            color="#5856D6"
-          />
-          <View style={{width: 10}} />
-          <Button
-            title="Galería"
-            // TODO: Por hacer
-            onPress={() => {}}
-            color="#5856D6"
-          />
-        </View>
+        {id.length > 0 && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginTop: 10,
+            }}>
+            <Button
+              title="Cámara"
+              // TODO: Por hacer
+              onPress={() => {}}
+              color="#5856D6"
+            />
+            <View style={{width: 10}} />
+            <Button
+              title="Galería"
+              // TODO: Por hacer
+              onPress={() => {}}
+              color="#5856D6"
+            />
+          </View>
+        )}
 
         {img.length > 0 && (
           <Image
