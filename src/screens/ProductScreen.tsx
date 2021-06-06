@@ -91,21 +91,21 @@ export const ProductScreen = ({route, navigation}: Props) => {
         {/* Picker / Selector */}
         <Text style={styles.label}>Categoría:</Text>
 
-        {isLoading && (
+        {isLoading ? (
           <ActivityIndicator
             style={{flex: 1, alignItems: 'center', alignContent: 'center'}}
             color="grey"
             size={30}
           />
+        ) : (
+          <Picker
+            selectedValue={categoriaId}
+            onValueChange={value => onChange(value, 'categoriaId')}>
+            {categories.map(c => (
+              <Picker.Item key={c._id} label={c.nombre} value={c._id} />
+            ))}
+          </Picker>
         )}
-
-        <Picker
-          selectedValue={categoriaId}
-          onValueChange={value => onChange(value, 'categoriaId')}>
-          {categories.map(c => (
-            <Picker.Item key={c._id} label={c.nombre} value={c._id} />
-          ))}
-        </Picker>
 
         <Button title="Guardar" onPress={saveOrUpdate} color="#5856D6" />
 
