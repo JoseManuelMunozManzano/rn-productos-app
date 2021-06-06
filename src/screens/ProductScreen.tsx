@@ -25,7 +25,7 @@ export const ProductScreen = ({route, navigation}: Props) => {
   const {id = '', name = ''} = route.params;
 
   const {categories, isLoading} = useCategories();
-  const {loadProductById, addProduct, updateProduct} =
+  const {loadProductById, addProduct, updateProduct, deleteProduct} =
     useContext(ProductsContext);
 
   const {_id, categoriaId, nombre, img, form, onChange, setFormValue} = useForm(
@@ -77,6 +77,10 @@ export const ProductScreen = ({route, navigation}: Props) => {
     }
   };
 
+  const deleteHandler = async () => {
+    await deleteProduct(id);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -107,7 +111,20 @@ export const ProductScreen = ({route, navigation}: Props) => {
           </Picker>
         )}
 
-        <Button title="Guardar" onPress={saveOrUpdate} color="#5856D6" />
+        {id.length > 0 ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginHorizontal: 20,
+            }}>
+            <Button title="Guardar" onPress={saveOrUpdate} color="#5856D6" />
+            <View style={{width: 10}} />
+            <Button title="Eliminar" onPress={deleteHandler} color="red" />
+          </View>
+        ) : (
+          <Button title="Guardar" onPress={saveOrUpdate} color="#5856D6" />
+        )}
 
         {_id.length > 0 && (
           <View
