@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import {Picker} from '@react-native-picker/picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import {StackScreenProps} from '@react-navigation/stack';
 import {ProductsStackParams} from '../navigator/ProductsNavigator';
@@ -23,6 +24,8 @@ interface Props
 
 export const ProductScreen = ({route, navigation}: Props) => {
   const {id = '', name = ''} = route.params;
+
+  const [tempUri, setTempUri] = useState<string>();
 
   const {categories, isLoading} = useCategories();
   const {loadProductById, addProduct, updateProduct, deleteProduct} =
@@ -81,6 +84,27 @@ export const ProductScreen = ({route, navigation}: Props) => {
     await deleteProduct(id);
   };
 
+  const takePhoto = () => {
+    launchCamera(
+      {
+        mediaType: 'photo',
+        quality: 0.5,
+      },
+      resp => {
+        if (resp.didCancel) {
+          return;
+        }
+
+        if (!resp.assets[0].uri) {
+          return;
+        }
+
+        setTempUri(resp.assets[0].uri);
+        // console.log(resp);
+      },
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -133,12 +157,7 @@ export const ProductScreen = ({route, navigation}: Props) => {
               justifyContent: 'center',
               marginTop: 10,
             }}>
-            <Button
-              title="Cámara"
-              // TODO: Por hacer
-              onPress={() => {}}
-              color="#5856D6"
-            />
+            <Button title="Cámara" onPress={takePhoto} color="#5856D6" />
             <View style={{width: 10}} />
             <Button
               title="Galería"
@@ -149,7 +168,7 @@ export const ProductScreen = ({route, navigation}: Props) => {
           </View>
         )}
 
-        {img.length > 0 && (
+        {img.length > 0 && !tempUri && (
           <Image
             source={{uri: img}}
             style={{marginTop: 20, width: '100%', height: 200}}
@@ -157,6 +176,12 @@ export const ProductScreen = ({route, navigation}: Props) => {
         )}
 
         {/* Mostrar imagen temporal */}
+        {tempUri && (
+          <Image
+            source={{uri: tempUri}}
+            style={{marginTop: 20, width: '100%', height: 200}}
+          />
+        )}
 
         {/* <Text>{JSON.stringify(form, null, 5)}</Text> */}
       </ScrollView>
