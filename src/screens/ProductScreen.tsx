@@ -28,17 +28,20 @@ export const ProductScreen = ({route, navigation}: Props) => {
   const [tempUri, setTempUri] = useState<string>();
 
   const {categories, isLoading} = useCategories();
-  const {loadProductById, addProduct, updateProduct, deleteProduct} =
-    useContext(ProductsContext);
+  const {
+    loadProductById,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    uploadImage,
+  } = useContext(ProductsContext);
 
-  const {_id, categoriaId, nombre, img, form, onChange, setFormValue} = useForm(
-    {
-      _id: id,
-      categoriaId: '',
-      nombre: name,
-      img: '',
-    },
-  );
+  const {_id, categoriaId, nombre, img, onChange, setFormValue} = useForm({
+    _id: id,
+    categoriaId: '',
+    nombre: name,
+    img: '',
+  });
 
   useEffect(() => {
     navigation.setOptions({
@@ -100,7 +103,7 @@ export const ProductScreen = ({route, navigation}: Props) => {
         }
 
         setTempUri(resp.assets[0].uri);
-        // console.log(resp);
+        uploadImage(resp.assets[0], _id);
       },
     );
   };
