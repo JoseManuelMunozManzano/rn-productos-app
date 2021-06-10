@@ -108,6 +108,27 @@ export const ProductScreen = ({route, navigation}: Props) => {
     );
   };
 
+  const takePhotoFromGallery = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 0.5,
+      },
+      resp => {
+        if (resp.didCancel) {
+          return;
+        }
+
+        if (!resp.assets[0].uri) {
+          return;
+        }
+
+        setTempUri(resp.assets[0].uri);
+        uploadImage(resp.assets[0], _id);
+      },
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -164,8 +185,7 @@ export const ProductScreen = ({route, navigation}: Props) => {
             <View style={{width: 10}} />
             <Button
               title="Galería"
-              // TODO: Por hacer
-              onPress={() => {}}
+              onPress={takePhotoFromGallery}
               color="#5856D6"
             />
           </View>
